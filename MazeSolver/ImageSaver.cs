@@ -52,7 +52,6 @@ namespace MazeSolver
                 }
 
                 draw.StrokeColor(MagickColors.MediumVioletRed).StrokeWidth(pathThickness);
-                draw.Text(path[0].x * wallThickness - wallThickness / 2, path[0].y * wallThickness - wallThickness / 4, "start");
                 for (int i = 0; i < path.Count-1; i++)
                 {
                     draw.Line(path[i].x*wallThickness+wallThickness/2, path[i].y * wallThickness + wallThickness / 2, path[i + 1].x * wallThickness + wallThickness / 2, path[i + 1].y * wallThickness + wallThickness / 2);
@@ -60,7 +59,7 @@ namespace MazeSolver
 
                 
                 draw.FillOpacity(new Percentage(0));
-                draw.StrokeColor(MagickColors.Black).StrokeWidth(8);
+                draw.StrokeColor(MagickColors.Black).StrokeWidth(4);
                 draw.Rectangle(0, 0, wallThickness * w, wallThickness * h);
                 image.Draw(draw);
                 image.Format = MagickFormat.Png;

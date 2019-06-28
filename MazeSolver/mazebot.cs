@@ -9,6 +9,7 @@ namespace MazeSolver
 {
     class MazeBot
     {
+        const string BASE_URL = "https://api.noopschallenge.com";
 #pragma warning disable 0649
         struct jsonResponse
         {
@@ -26,7 +27,7 @@ namespace MazeSolver
             public string directions;
         }
 
-        struct solutionResponseJson
+        public struct solutionResponseJson
         {
             public string result;
             public string message;
@@ -35,15 +36,25 @@ namespace MazeSolver
             public int elapsed;
             public string nextMaze;
         }
+
+        struct jsonRace
+        {
+            public string message;
+            public string nextMaze;
+            public string certificate;
+            public string mazePath;
+        }
 #pragma warning restore 0649
 
         private jsonResponse currentMaze;
         private int[,] currentMapData;
         public int[,] CurrentMapData { get => currentMapData; }
 
-        public MazeBot()
+        public MazeBot() :this("/random/"){}
+
+        public MazeBot(string path)
         {
-            currentMapData = getMaze();
+            currentMapData = getMaze(path);
         }
 
         public string getMapName()
@@ -51,11 +62,16 @@ namespace MazeSolver
             return currentMaze.name;
         }
 
-        public bool checkSolution(List<coordinate> sln)
+        public solutionResponseJson CheckSolution(List<coordinate> sln)
+        {
+            return JsonConvert.DeserializeObject<solutionResponseJson>(checkSolution(sln));
+        }
+
+        private string checkSolution(List<coordinate> sln)
         {
             string formatted = formatInstructions(sln);
 
-            string url = "https://api.noopschallenge.com" + currentMaze.mazePath;
+            string url = BASE_URL + currentMaze.mazePath;
             solutionJson solutionObj = new solutionJson { directions = formatted };
 
             var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
@@ -65,7 +81,6 @@ namespace MazeSolver
             string json = JsonConvert.SerializeObject(solutionObj);
             using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
             {
-                Console.WriteLine(json);
                 streamWriter.Write(json);
             }
             try
@@ -74,7 +89,7 @@ namespace MazeSolver
                 using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
                 {
                     var result = streamReader.ReadToEnd();
-                    Console.WriteLine(result);
+                    return result;
                 }
             }
             catch (System.Net.WebException ex)
@@ -85,10 +100,8 @@ namespace MazeSolver
                     var result = streamReader.ReadToEnd();
                     Console.WriteLine(result);
                 }
-                return false;
+                return "";
             }
-            
-            return true;
         }
 
         private string formatInstructions(List<coordinate> moves)
@@ -124,9 +137,10 @@ namespace MazeSolver
             return res;
         }
 
-        private int[,] getMaze()
+        private int[,] getMaze(string path)
         {
-            WebRequest req = HttpWebRequest.Create("https://api.noopschallenge.com/mazebot/random/");
+            WebRequest req = HttpWebRequest.Create(BASE_URL +path);
+
             //WebRequest req = HttpWebRequest.Create("https://api.noopschallenge.com/mazebot/random/?minSize=20&maxSize=20");
             req.Method = "GET";
             WebResponse response = req.GetResponse();
@@ -137,8 +151,6 @@ namespace MazeSolver
                 jsonData = reader.ReadToEnd();
             }
             currentMaze = JsonConvert.DeserializeObject<jsonResponse>(jsonData);
-            Console.WriteLine($"Maze Start: {currentMaze.startingPosition}");
-            Console.WriteLine($"Maze End: {currentMaze.endingPosition}");
             return parseMazeToInts(currentMaze.map);
         }
 
@@ -176,6 +188,62 @@ namespace MazeSolver
                 }
             }
             return data;
+        }
+
+        public static void Race(IHeuristic heuristic)
+        {
+            List<List<coordinate>> all_paths = new List<List<coordinate>>(); //Paths taken during various mazes;
+            List<int[,]> mazes = new List<int[,]>(); //Graphs in race
+
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(BASE_URL + "/mazebot/race/start");
+            httpWebRequest.ContentType = "application/json";
+            httpWebRequest.Method = "POST";
+
+            string json = "{\"login\":\"agentender\"}";
+            using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+            {
+                streamWriter.Write(json);
+            }
+            try
+            {
+                var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                {
+                    var result = streamReader.ReadToEnd();
+                    jsonRace res = JsonConvert.DeserializeObject<jsonRace>(result);
+                    while (res.nextMaze != null)
+                    {
+                        Console.WriteLine($"Starting Maze {mazes.Count + 1}");
+                        MazeBot m = new MazeBot(res.nextMaze);
+                        Graph g = Graph.Graphify(m.CurrentMapData);
+                        mazes.Add(m.CurrentMapData);
+                        Solver s = new Solver(g, heuristic);
+                        List<coordinate> path = s.getSteps();
+                        all_paths.Add(path);
+                        json = m.checkSolution(path);
+                        res = JsonConvert.DeserializeObject<jsonRace>(json);
+                    }
+                    Console.WriteLine(res.message);
+                    Console.WriteLine("CERTIFICATE: " + BASE_URL + res.certificate);
+                }
+            }
+            catch (System.Net.WebException ex)
+            {
+                var httpResponse = ex.Response;
+                using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                {
+                    var result = streamReader.ReadToEnd();
+                    Console.WriteLine(result);
+                }
+                throw ex;
+            }
+
+            string directory = $"race/{ DateTime.Now.ToFileTime()}/";
+            Directory.CreateDirectory(directory);
+            for (int i = 0; i < mazes.Count; i++) //Save all mazes
+            {
+                ImageSaver.SaveMazeImage(mazes[i], all_paths[i], 16, 8, $"{directory}/{i}");
+            }
         }
     }
 }

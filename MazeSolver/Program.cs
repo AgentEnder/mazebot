@@ -9,16 +9,17 @@ namespace MazeSolver
     {
         static void Main(string[] args)
         {
-            for (int i = 0; i < 1; i++)
-            {
-                MazeBot m = new MazeBot();
-                Graph graph = Graph.Graphify(m.CurrentMapData);
-                Solver s = new Solver(graph, new ManhattanDistance());
-                List<coordinate> solutionPath = s.getSteps();
-                ImageSaver.SaveMazeImage(m.CurrentMapData, s.getSteps(), 32, 8, m.getMapName());
-                Console.WriteLine($"Solution Valid: {m.checkSolution(solutionPath)}");
-                //Console.WriteLine(List2String<coordinate>(s.getSteps()));
-            }
+            MazeBot.Race(new ManhattanDistance());
+            //for (int i = 0; i < 1; i++)
+            //{
+            //    MazeBot m = new MazeBot();
+            //    Graph graph = Graph.Graphify(m.CurrentMapData);
+            //    Solver s = new Solver(graph, new ManhattanDistance());
+            //    List<coordinate> solutionPath = s.getSteps();
+            //    ImageSaver.SaveMazeImage(m.CurrentMapData, s.getSteps(), 32, 8, m.getMapName());
+            //    Console.WriteLine(m.CheckSolution(solutionPath).message);
+            //    //Console.WriteLine(List2String<coordinate>(s.getSteps()));
+            //}
             Console.ReadLine();
         }
 

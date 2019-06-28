@@ -6,7 +6,7 @@ namespace MazeSolver
 {
     class BreadthFirst : IHeuristic
     {
-        public int Score(Graph g, coordinate move)
+        public double Score(Graph g, coordinate move)
         {
             return 0;
         }

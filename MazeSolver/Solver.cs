@@ -65,7 +65,7 @@ namespace MazeSolver
 
         struct pqueueItem
         {
-            public int priority;
+            public double priority;
             public coordinate curr;
             public List<coordinate> path;
         }
