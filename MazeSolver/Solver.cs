@@ -18,18 +18,20 @@ namespace MazeSolver
         public void Solve()
         {
 
-            List<pqueueItem> spots = new List<pqueueItem>();
+            //List<pqueueItem> spots = new List<pqueueItem>();
+            BinaryHeap<pqueueItem> spots = new BinaryHeap<pqueueItem>();
             List<coordinate> seen = new List<coordinate>();
-            spots.Add(new pqueueItem
+            spots.insert(new pqueueItem
             {
                 priority = 0,
                 curr = graph.Start,
                 path = new List<coordinate>() { graph.Start}
             });
 
-            while (!spots[0].curr.Equals(graph.End))
+            pqueueItem current = spots.extractMin(); ;
+            while (!current.curr.Equals(graph.End))
             {
-                List<coordinate> adjs = graph.GetAdjacencies(spots[0].curr);
+                List<coordinate> adjs = graph.GetAdjacencies(current.curr);
                 foreach (coordinate adj in adjs)
                 {
                     if (seen.Contains(adj))
@@ -38,19 +40,17 @@ namespace MazeSolver
                     }
                     pqueueItem new_spot = new pqueueItem()
                     {
-                        priority = spots[0].path.Count + _heuristic.Score(graph, adj),
+                        priority = current.path.Count + _heuristic.Score(graph, adj),
                         curr = adj,
-                        path = new List<coordinate>(spots[0].path)
+                        path = new List<coordinate>(current.path)
                     };
                     new_spot.path.Add(adj);
-                    spots.Add(new_spot);
+                    spots.insert(new_spot);
                 }
-                seen.Add(spots[0].curr);
-                spots.RemoveAt(0);
-                spots.Sort((x, y) => (x.priority.CompareTo(y.priority)));
-
+                seen.Add(current.curr);
+                current = spots.extractMin();
             }
-            path = spots[0].path;
+            path = current.path;
 
         }
 
@@ -63,11 +63,16 @@ namespace MazeSolver
             return path;
         }
 
-        struct pqueueItem
+        struct pqueueItem : IComparable<pqueueItem>
         {
             public double priority;
             public coordinate curr;
             public List<coordinate> path;
+
+            public int CompareTo(pqueueItem other)
+            {
+                return priority.CompareTo(other.priority);
+            }
         }
     }
 }

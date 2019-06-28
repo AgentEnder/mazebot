@@ -50,7 +50,7 @@ namespace MazeSolver
         private int[,] currentMapData;
         public int[,] CurrentMapData { get => currentMapData; }
 
-        public MazeBot() :this("/random/"){}
+        public MazeBot() :this("/mazebot/random/"){}
 
         public MazeBot(string path)
         {
