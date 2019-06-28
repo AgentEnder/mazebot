@@ -1,4 +1,4 @@
-![Badge](https://img.shields.io/badge/dynamic/json.svg?color=success&label=Race&query=%24.elapsed&url=http%3A%2F%2Fapi.noopschallenge.com%2Fmazebot%2Frace%2Fcertificate%2kOzeb90QJkCXhnQCobmfz4qtXsismj1IW2mQtZOXCK86drsLMR1vi1b5qz7LZ-s3)
+![Badge](https://img.shields.io/badge/dynamic/json.svg?color=success&label=Race&query=%24.elapsed&url=http%3A%2F%2Fapi.noopschallenge.com%2Fmazebot%2Frace%2Fcertificate%2FkOzeb90QJkCXhnQCobmfz4qtXsismj1IW2mQtZOXCK86drsLMR1vi1b5qz7LZ-s3)
 
 ![Mazebot animation](https://user-images.githubusercontent.com/212941/59631813-9ad09f80-90fd-11e9-8556-810c48531558.gif)
 
