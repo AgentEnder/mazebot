@@ -213,7 +213,7 @@ namespace MazeSolver
                     jsonRace res = JsonConvert.DeserializeObject<jsonRace>(result);
                     while (res.nextMaze != null)
                     {
-                        Console.WriteLine($"Starting Maze {mazes.Count + 1}");
+                        Console.WriteLine($"Starting Maze {mazes.Count}");
                         MazeBot m = new MazeBot(res.nextMaze);
                         Graph g = Graph.Graphify(m.CurrentMapData);
                         mazes.Add(m.CurrentMapData);
@@ -223,8 +223,8 @@ namespace MazeSolver
                         json = m.checkSolution(path);
                         res = JsonConvert.DeserializeObject<jsonRace>(json);
                     }
-                    Console.WriteLine(res.message);
-                    Console.WriteLine("CERTIFICATE: " + BASE_URL + res.certificate);
+                    Console.WriteLine("\n" + res.message);
+                    Console.WriteLine("\n" + "CERTIFICATE: " + BASE_URL + res.certificate);
                 }
             }
             catch (System.Net.WebException ex)
@@ -238,10 +238,14 @@ namespace MazeSolver
                 throw ex;
             }
 
+
+            //Save all of the mazes
             string directory = $"race/{ DateTime.Now.ToFileTime()}/";
             Directory.CreateDirectory(directory);
-            for (int i = 0; i < mazes.Count; i++) //Save all mazes
+            Console.WriteLine();
+            for (int i = 0; i < mazes.Count; i++)
             {
+                Console.WriteLine($"Saving Maze {i}");
                 ImageSaver.SaveMazeImage(mazes[i], all_paths[i], 16, 8, $"{directory}/{i}");
             }
         }
