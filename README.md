@@ -1,4 +1,28 @@
+# MazeBot Results and Analysis
+
+## Approach:
+* Represent the maze as a graph
+  * mazebot.cs: Responsible for downloading the map initially, and uploading results.
+  * Graph.cs: Takes the graph as a 2D int array and scans it to find adjacent paths
+* Utilize a best first search algorithm
+  * IHeuristic: Implement this interface to define your own heuristic functions for best first.
+    * BreadthFirst.cs: Score returns 0, this forces breadth first pathfinding (should be the worst performing of the bunch
+    * ManhattanDistance.cs: Score returns manhattan distance of new point to end goal (this ends up being the best of the 3.
+    * EuclideanDistance.cs: Score returns straight line distance of new point to end goal
+  * Solver: Take a heuristic in the constructor, uses it to pathfind the maze.
+
+## Results:
+The algorithm works well, suprisingly euclidean distance is less performant in this instance. Might be worth looking in to in the future. Some optimizations are possible, with some already being made. The only major one thus far was replacing a List<t> with a BinaryHeap for our priority queue.
+
+### Race Results:
+#### List\<T\>
 ![Badge](https://img.shields.io/badge/dynamic/json.svg?color=success&label=Race&query=%24.elapsed&url=http%3A%2F%2Fapi.noopschallenge.com%2Fmazebot%2Frace%2Fcertificate%2FkOzeb90QJkCXhnQCobmfz4qtXsismj1IW2mQtZOXCK86drsLMR1vi1b5qz7LZ-s3)
+
+#### BinaryHeap\<T\>
+![Badge](https://img.shields.io/badge/dynamic/json.svg?color=success&label=Race&query=%24.elapsed&url=http%3A%2F%2Fapi.noopschallenge.com%2Fmazebot%2Frace%2Fcertificate%2FtoORr77JvUMmhcFFPR1V0JRvJegUta1utviU58ytlT87DRx2u49XnT81uuSNoBaM)
+
+
+# Old Readme (From noops-challenge/mazebot)
 
 ![Mazebot animation](https://user-images.githubusercontent.com/212941/59631813-9ad09f80-90fd-11e9-8556-810c48531558.gif)
 
