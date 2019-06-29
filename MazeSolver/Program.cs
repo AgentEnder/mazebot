@@ -11,8 +11,16 @@ namespace MazeSolver
         static void Main(string[] args)
         {
             //Run I races
-
-            RunPQueueTests(iterations: 100);
+            int iter = 25;
+            if (args.Length == 1)
+            {
+                iter = Int32.Parse(args[0]);
+            }
+            else
+            {
+                Console.WriteLine(Utils.Array2String<string>(args));
+            }
+            RunPQueueTests(iter);
 
             //Uncomment below to run random maze iterations
 

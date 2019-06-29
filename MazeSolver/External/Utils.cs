@@ -27,5 +27,15 @@ namespace External
             }
             return $"{ret}]";
         }
+
+        public static string Array2String<T>(T[] array)
+        {
+            string ret = "[";
+            foreach (T item in array)
+            {
+                ret += item;
+            }
+            return $"{ret}]";
+        }
     }
 }
