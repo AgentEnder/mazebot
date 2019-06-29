@@ -11,23 +11,23 @@ namespace MazeSolver
     {
         const string BASE_URL = "https://api.noopschallenge.com";
 #pragma warning disable 0649
-        struct jsonResponse
+        struct JsonMapResponse
         {
             public string name;
             public string mazePath;
             public int[] startingPosition;
             public int[] endingPosition;
             public string message;
-            public solutionJson exampleSolution;
+            public SolutionJson exampleSolution;
             public string[,] map;
         }
 
-        struct solutionJson
+        struct SolutionJson
         {
             public string directions;
         }
 
-        public struct solutionResponseJson
+        public struct SolutionResponseJson
         {
             public string result;
             public string message;
@@ -37,7 +37,7 @@ namespace MazeSolver
             public string nextMaze;
         }
 
-        struct jsonRace
+        struct JsonRace
         {
             public string message;
             public string nextMaze;
@@ -46,8 +46,8 @@ namespace MazeSolver
         }
 #pragma warning restore 0649
 
-        private jsonResponse currentMaze;
-        private int[,] currentMapData;
+        private JsonMapResponse currentMaze;
+        private readonly int[,] currentMapData;
         public int[,] CurrentMapData { get => currentMapData; }
 
         public MazeBot() :this("/mazebot/random/"){}
@@ -57,14 +57,14 @@ namespace MazeSolver
             currentMapData = getMaze(path);
         }
 
-        public string getMapName()
+        public string GetMapName()
         {
             return currentMaze.name;
         }
 
-        public solutionResponseJson CheckSolution(List<coordinate> sln)
+        public SolutionResponseJson CheckSolution(List<coordinate> sln)
         {
-            return JsonConvert.DeserializeObject<solutionResponseJson>(checkSolution(sln));
+            return JsonConvert.DeserializeObject<SolutionResponseJson>(checkSolution(sln));
         }
 
         private string checkSolution(List<coordinate> sln)
@@ -72,7 +72,7 @@ namespace MazeSolver
             string formatted = formatInstructions(sln);
 
             string url = BASE_URL + currentMaze.mazePath;
-            solutionJson solutionObj = new solutionJson { directions = formatted };
+            SolutionJson solutionObj = new SolutionJson { directions = formatted };
 
             var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
             httpWebRequest.ContentType = "application/json";
@@ -150,11 +150,11 @@ namespace MazeSolver
                 StreamReader reader = new StreamReader(responseStream);
                 jsonData = reader.ReadToEnd();
             }
-            currentMaze = JsonConvert.DeserializeObject<jsonResponse>(jsonData);
+            currentMaze = JsonConvert.DeserializeObject<JsonMapResponse>(jsonData);
             return parseMazeToInts(currentMaze.map);
         }
 
-        protected int[,] parseMazeToInts(string[,] original)
+        private int[,] parseMazeToInts(string[,] original)
         {
             int w = original.GetLength(0);
             int h = original.GetLength(1);
@@ -210,7 +210,7 @@ namespace MazeSolver
                 using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
                 {
                     var result = streamReader.ReadToEnd();
-                    jsonRace res = JsonConvert.DeserializeObject<jsonRace>(result);
+                    JsonRace res = JsonConvert.DeserializeObject<JsonRace>(result);
                     while (res.nextMaze != null)
                     {
                         Console.WriteLine($"Starting Maze {mazes.Count}");
@@ -221,7 +221,7 @@ namespace MazeSolver
                         List<coordinate> path = s.getSteps();
                         all_paths.Add(path);
                         json = m.checkSolution(path);
-                        res = JsonConvert.DeserializeObject<jsonRace>(json);
+                        res = JsonConvert.DeserializeObject<JsonRace>(json);
                     }
                     Console.WriteLine("\n" + res.message);
                     Console.WriteLine("\n" + "CERTIFICATE: " + BASE_URL + res.certificate);
