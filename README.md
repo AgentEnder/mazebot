@@ -19,8 +19,7 @@ The algorithm works well, suprisingly euclidean distance is less performant in t
 ![Badge](https://img.shields.io/badge/dynamic/json.svg?color=success&label=Race&query=%24.elapsed&url=http%3A%2F%2Fapi.noopschallenge.com%2Fmazebot%2Frace%2Fcertificate%2FkOzeb90QJkCXhnQCobmfz4qtXsismj1IW2mQtZOXCK86drsLMR1vi1b5qz7LZ-s3)
 
 #### BinaryHeap\<T\>
-![Badge](https://img.shields.io/badge/dynamic/json.svg?color=success&label=Race&query=%24.elapsed&url=http%3A%2F%2Fapi.noopschallenge.com%2Fmazebot%2Frace%2Fcertificate%2FtoORr77JvUMmhcFFPR1V0JRvJegUta1utviU58ytlT87DRx2u49XnT81uuSNoBaM)
-
+![Badge](https://img.shields.io/badge/dynamic/json.svg?color=success&label=Race&query=%24.elapsed&url=http%3A%2F%2Fapi.noopschallenge.com%2Fmazebot%2Frace%2Fcertificate%2FAWBPnvTSd6DbjIBxlDQurJJTd74iTUe55A2W9U_PIvmCGeeUc0ZBwSelWGk7EpqR)
 
 # Old Readme (From noops-challenge/mazebot)
 

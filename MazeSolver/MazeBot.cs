@@ -57,7 +57,7 @@ namespace MazeSolver
         public string MapName { get => currentMaze.name; }
         public int[,] CurrentMapData { get => currentMapData; }
 
-        public MazeBot() :this("/mazebot/random/"){} // get a random maze when not fed a path.
+        public MazeBot() : this("/mazebot/random/") { } // get a random maze when not fed a path.
 
         public MazeBot(string path)
         {
@@ -126,7 +126,7 @@ namespace MazeSolver
         {
             string res = "";
 
-            for (int i = 0; i < moves.Count-1; i++)
+            for (int i = 0; i < moves.Count - 1; i++)
             {
                 Coordinate delta = new Coordinate(
                     moves[i].x - moves[i + 1].x,
@@ -157,7 +157,7 @@ namespace MazeSolver
 
         private int[,] getMaze(string path)
         {
-            WebRequest req = HttpWebRequest.Create(BASE_URL +path);
+            WebRequest req = HttpWebRequest.Create(BASE_URL + path);
 
             req.Method = "GET";
             WebResponse response = req.GetResponse();
