@@ -12,15 +12,39 @@
   * Solver: Take a heuristic in the constructor, uses it to pathfind the maze.
 
 ## Results:
-The algorithm works well, suprisingly euclidean distance is less performant in this instance. Might be worth looking in to in the future. Some optimizations are possible, with some already being made. The only major one thus far was replacing a List<t> with a BinaryHeap for our priority queue.
+The algorithm works well, suprisingly euclidean distance is less performant in this instance. Result comparison between algorithms has been rather intersting, with a BinaryHeap implemented for the priority queue actually leading to worse average times (over 100 runs).
 
 ### Race Results:
+
+These results are separated between the two priority queue implementations, in an effort to compare the two methods. The BinaryHeap has a better best case, and a lower worst case but runs a little longer on average for whatever reason.
+
 #### List\<T\>
-![Badge](https://img.shields.io/badge/dynamic/json.svg?color=success&label=Race&query=%24.elapsed&url=http%3A%2F%2Fapi.noopschallenge.com%2Fmazebot%2Frace%2Fcertificate%2FkOzeb90QJkCXhnQCobmfz4qtXsismj1IW2mQtZOXCK86drsLMR1vi1b5qz7LZ-s3)
+
+Best Case
+![Badge](https://img.shields.io/badge/dynamic/json.svg?color=success&label=Race&query=%24.elapsed&url=http%3A%2F%2Fapi.noopschallenge.com%2Fmazebot%2Frace%2Fcertificate%2FTeEs_Culii2EhimYoXRMybD9MX_eqwXHF9ZfFAbtBn2VmH0ryogav9TcJqjghtc_)
+
+Average Case (Closest Badge)
+![Badge](https://img.shields.io/badge/dynamic/json.svg?color=success&label=Race&query=%24.elapsed&url=http%3A%2F%2Fapi.noopschallenge.com%2Fmazebot%2Frace%2Fcertificate%2FIie4DgcmdIf8PUzRYpDFTOZoL045-Zg7xDKXw5UCZwvP2ICImjJ1DznvsdcR6vzF)
+
+Median Case
+![Badge](https://img.shields.io/badge/dynamic/json.svg?color=success&label=Race&query=%24.elapsed&url=http%3A%2F%2Fapi.noopschallenge.com%2Fmazebot%2Frace%2Fcertificate%2FVgT7VhQR4mPN0h7ROZbCbs1fpy0aKLWf_kedP2Ofa4r0VImwjJmZJAHlOzVfGXAC)
+
+Worst Case
+![Badge](https://img.shields.io/badge/dynamic/json.svg?color=success&label=Race&query=%24.elapsed&url=http%3A%2F%2Fapi.noopschallenge.com%2Fmazebot%2Frace%2Fcertificate%2FDXnoSe9BltY4fTyuK5ZWhRHSOlFPM4DNJ76MISPN3Xl3b4uMUqLX1hpJIy5K_kGp)
 
 #### BinaryHeap\<T\>
-![Badge](https://img.shields.io/badge/dynamic/json.svg?color=success&label=Race&query=%24.elapsed&url=http%3A%2F%2Fapi.noopschallenge.com%2Fmazebot%2Frace%2Fcertificate%2FAWBPnvTSd6DbjIBxlDQurJJTd74iTUe55A2W9U_PIvmCGeeUc0ZBwSelWGk7EpqR)
 
+Best Case
+![Badge](https://img.shields.io/badge/dynamic/json.svg?color=success&label=Race&query=%24.elapsed&url=http%3A%2F%2Fapi.noopschallenge.com%2Fmazebot%2Frace%2Fcertificate%2F5dYQgR-GskYo9TYW_dDiqE_RSHzuDBSm5IzqMaaGGM4BM4OsepUC6_I7dqaL70_T)
+
+Average Case (Closest Badge)
+![Badge](https://img.shields.io/badge/dynamic/json.svg?color=success&label=Race&query=%24.elapsed&url=http%3A%2F%2Fapi.noopschallenge.com%2Fmazebot%2Frace%2Fcertificate%2Fs1rFcnTOLvU8vIqEB9GQt9mz81Zo9Rnn5IvA1MK6TZVkTfNMyNJL8wS3dannp2lf)
+
+Median Case
+![Badge](https://img.shields.io/badge/dynamic/json.svg?color=success&label=Race&query=%24.elapsed&url=http%3A%2F%2Fapi.noopschallenge.com%2Fmazebot%2Frace%2Fcertificate%2FAWBPnvTSd6DbjIBxlDQurNqX8rvA-nYUF5iRlP8KzA5qAZJuK1ABwRfL9wPg8Jh8)
+
+Worst Case
+![Badge](https://img.shields.io/badge/dynamic/json.svg?color=success&label=Race&query=%24.elapsed&url=http%3A%2F%2Fapi.noopschallenge.com%2Fmazebot%2Frace%2Fcertificate%2FCM8a4uNmH_CAxgXohRIaorf6K7e1CYjC5Day55pP61StR2ktpNXiYvNvk_h35XG5)
 # Old Readme (From noops-challenge/mazebot)
 
 ![Mazebot animation](https://user-images.githubusercontent.com/212941/59631813-9ad09f80-90fd-11e9-8556-810c48531558.gif)

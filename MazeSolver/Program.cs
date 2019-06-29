@@ -12,17 +12,7 @@ namespace MazeSolver
         {
             //Run I races
 
-            for (int i = 0; i < 10; i++)
-            {
-                DateTime start = DateTime.Now;
-                Console.WriteLine($"Starting race {i} at {start} \n");
-                MazeBot.Race(new ManhattanDistance());
-                DateTime f = DateTime.Now;
-                Console.WriteLine($"Finished at {f}");
-                double elapsed = ((f.ToFileTime() - start.ToFileTime()) * 1 / 10000000); //Filetime is in 100 nanosecond intervals
-                Console.WriteLine($"\nSolving and Drawing took {elapsed} seconds");
-                Console.WriteLine("===============================================\n");
-            }
+            RunPQueueTests(iterations: 100);
 
             //Uncomment below to run random maze iterations
 
@@ -39,6 +29,38 @@ namespace MazeSolver
             //    Console.WriteLine(Utils.List2String<Coordinate>(s.GetSteps()));
             //}
             Console.ReadLine();
+        }
+
+        static void RunPQueueTests( int iterations = 10, bool draw = false)
+        {
+            for (int i = 0; i < iterations; i++)
+            {
+                DateTime start = DateTime.Now;
+                Console.WriteLine($"Starting race {i} at {start} \n");
+                MazeBot.Race(new ManhattanDistance(), new BinaryHeap<Solver.PriorityQueueItem>(), draw);
+                DateTime f = DateTime.Now;
+                Console.WriteLine($"Finished at {f}");
+                double elapsed = ((f.ToFileTime() - start.ToFileTime()) / (double)10000000); //Filetime is in 100 nanosecond intervals
+                if (draw)
+                    Console.WriteLine($"\nSolving and Drawing took {elapsed} seconds");
+                else
+                    Console.WriteLine($"\nSolving took {elapsed} seconds");
+                Console.WriteLine("===============================================\n");
+            }
+            for (int i = 0; i < iterations; i++)
+            {
+                DateTime start = DateTime.Now;
+                Console.WriteLine($"Starting race {i} at {start} \n");
+                MazeBot.Race(new ManhattanDistance(), new ListPriorityQueue<Solver.PriorityQueueItem>(), draw);
+                DateTime f = DateTime.Now;
+                Console.WriteLine($"Finished at {f}");
+                double elapsed = ((f.ToFileTime() - start.ToFileTime())  / (double)10000000); //Filetime is in 100 nanosecond intervals
+                if (draw)
+                    Console.WriteLine($"\nSolving and Drawing took {elapsed} seconds");
+                else
+                    Console.WriteLine($"\nSolving took {elapsed} seconds");
+                Console.WriteLine("===============================================\n");
+            }
         }
     }
 }

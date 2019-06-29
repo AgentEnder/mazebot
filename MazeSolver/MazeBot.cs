@@ -45,9 +45,10 @@ namespace MazeSolver
         struct jsonRace
         {
             public string message;
+            public float elapsed;
             public string nextMaze;
             public string certificate;
-            public string mazePath;
+            
         }
 #pragma warning restore 0649
         #endregion
@@ -216,7 +217,8 @@ namespace MazeSolver
         /// Run the Race Routine from MazeBot API
         /// </summary>
         /// <param name="heuristic">What heuristic should be used</param>
-        public static void Race(IHeuristic heuristic)
+        /// <param name="queue">What type of queue should be used for the race</param>
+        public static void Race(IHeuristic heuristic, IPriorityQueue<Solver.PriorityQueueItem> queue, bool draw = false)
         {
             List<List<Coordinate>> all_paths = new List<List<Coordinate>>(); //Paths taken during various mazes;
             List<int[,]> mazes = new List<int[,]>(); //Graphs in race
@@ -226,6 +228,7 @@ namespace MazeSolver
             httpWebRequest.Method = "POST";
 
             string json = "{\"login\":\"agentender\"}"; //Replace 'agentender' with your username if you want your cert to match.
+            jsonRace res;
             using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
             {
                 streamWriter.Write(json); //Start race
@@ -236,7 +239,7 @@ namespace MazeSolver
                 using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
                 {
                     var result = streamReader.ReadToEnd();
-                    jsonRace res = JsonConvert.DeserializeObject<jsonRace>(result);
+                    res = JsonConvert.DeserializeObject<jsonRace>(result);
                     while (res.nextMaze != null) //Theres more races!
                     {
                         Console.WriteLine($"Starting Maze {mazes.Count}"); //Log the maze start, so the consoles not empty the whole time
@@ -249,8 +252,6 @@ namespace MazeSolver
                         json = m.checkSolution(path); //Check your work
                         res = JsonConvert.DeserializeObject<jsonRace>(json); //Get next maze
                     }
-                    Console.WriteLine("\n" + res.message);
-                    Console.WriteLine("\n" + "CERTIFICATE: " + BASE_URL + res.certificate);
                 }
             }
             catch (System.Net.WebException ex) //Bad req some where
@@ -264,16 +265,27 @@ namespace MazeSolver
                 throw ex;
             }
 
-
-            //Save all of the mazes
-            string directory = $"race/{ DateTime.Now.ToFileTime()}/";
-            Directory.CreateDirectory(directory);
-            Console.WriteLine();
-            for (int i = 0; i < mazes.Count; i++)
+            if (draw)
             {
-                Console.WriteLine($"Saving Maze {i}");
-                ImageSaver.SaveMazeImage(mazes[i], all_paths[i], 16, 8, $"{directory}/{i}");
+                //Save all of the mazes
+                string directory = $"race/{ DateTime.Now.ToFileTime()}/";
+                Directory.CreateDirectory(directory);
+                Console.WriteLine();
+                for (int i = 0; i < mazes.Count; i++)
+                {
+                    Console.WriteLine($"Saving Maze {i}");
+                    ImageSaver.SaveMazeImage(mazes[i], all_paths[i], 16, 8, $"{directory}/{i}");
+                }
             }
+            string filePath = $"race/{queue.GetType().Name}Certificates.csv";
+            using (StreamWriter f = new StreamWriter(filePath, true))
+            {
+                string time = res.message;
+                time = time.Substring(time.IndexOf("in ") + 3);
+                time = time.Substring(0, time.IndexOf(" seconds"));
+                f.WriteLine($"{time},{BASE_URL + res.certificate}");
+            }
+
         }
     }
 }

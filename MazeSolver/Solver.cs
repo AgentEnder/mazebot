@@ -9,26 +9,34 @@ namespace MazeSolver
         private IHeuristic _heuristic;
         private Graph graph;
         private List<Coordinate> path;
-        public Solver(Graph g, IHeuristic heuristic)
+        public static IPriorityQueue<PriorityQueueItem> priorityQueue;
+
+        public Solver(Graph g) : this(g, new ManhattanDistance()) { }
+
+        public Solver(Graph g, IHeuristic heuristic) : this(g, heuristic, new BinaryHeap<PriorityQueueItem>()) { }
+
+        public Solver(Graph g, IHeuristic heuristic, IPriorityQueue<PriorityQueueItem> queue)
         {
             _heuristic = heuristic;
             graph = g;
+            queue.Clear();
+            priorityQueue = queue;
         }
 
         public void Solve()
         {
 
-            BinaryHeap<pqueueItem> spots = new BinaryHeap<pqueueItem>(); //Spots remaining to check
+            IPriorityQueue<PriorityQueueItem> spots = priorityQueue;  //Spots remaining to check
             List<Coordinate> seen = new List<Coordinate>(); //Spots already seen. Dont add them again.
             //Add the starting point to the graph.
-            spots.Insert(new pqueueItem
+            spots.Insert(new PriorityQueueItem
             {
                 priority = 0,
                 curr = graph.Start,
                 path = new List<Coordinate>() { graph.Start}
             });
 
-            pqueueItem current = spots.ExtractMin(); //Get the min value from pqueue.
+            PriorityQueueItem current = spots.ExtractMin(); //Get the min value from pqueue.
             while (!current.curr.Equals(graph.End)) //Not to end yet.
             {
                 List<Coordinate> adjs = graph.GetAdjacencies(current.curr); //Where all can I go?
@@ -39,7 +47,7 @@ namespace MazeSolver
                         continue;
                     }
                     //I could come here though
-                    pqueueItem new_spot = new pqueueItem()
+                    PriorityQueueItem new_spot = new PriorityQueueItem()
                     {
                         priority = current.path.Count + _heuristic.Score(graph, adj),
                         curr = adj,
@@ -68,13 +76,13 @@ namespace MazeSolver
             return path;
         }
 
-        private struct pqueueItem : IComparable<pqueueItem>
+        public struct PriorityQueueItem : IComparable<PriorityQueueItem>
         {
             public double priority;
             public Coordinate curr;
             public List<Coordinate> path;
 
-            public int CompareTo(pqueueItem other)
+            public int CompareTo(PriorityQueueItem other)
             {
                 return priority.CompareTo(other.priority);
             }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace MazeSolver
 {
-    class BinaryHeap<T> where T : IComparable<T>
+    class BinaryHeap<T>: IPriorityQueue<T> where T : IComparable<T>
     {
         /// This Class uses a dictionary because list[0] would throw an error given
         /// that the list did not yet contain any objects. This is normally wanted, but
@@ -84,6 +84,12 @@ namespace MazeSolver
             T temp = heap[a];
             heap[a] = heap[b];
             heap[b] = temp;
+        }
+
+        public void Clear()
+        {
+            heap.Clear();
+            size = 0;
         }
     }
 }
