@@ -110,9 +110,10 @@ namespace MazeSolver
                 using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
                 {
                     var result = streamReader.ReadToEnd(); //Let it explain whats wrong
+                    Console.WriteLine(formatted);
                     Console.WriteLine(result);
+                    return result;
                 }
-                return "";
             }
         }
 
@@ -135,19 +136,19 @@ namespace MazeSolver
                 //This looks weird... Our List<coordinates> is actually transposed from what the server expects
                 if (delta.x < 0)
                 {
-                    res += "E";
+                    res += "S";
                 }
                 else if (delta.x > 0)
                 {
-                    res += "W";
+                    res += "N";
                 }
                 else if (delta.y < 0)
                 {
-                    res += "S";
+                    res += "E";
                 }
                 else if (delta.y > 0)
                 {
-                    res += "N";
+                    res += "W";
                 }
             }
 

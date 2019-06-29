@@ -2,6 +2,7 @@
 using System.IO;
 using System.Collections.Generic;
 using System.Net;
+using External;
 
 namespace MazeSolver
 {
@@ -27,15 +28,15 @@ namespace MazeSolver
 
             //string dir = $"runs/{DateTime.Now.ToFileTime()}/";
             //Directory.CreateDirectory(dir);
-            //for (int i = 0; i < 1000; i++)
+            //for (int i = 0; i < 1; i++)
             //{
             //    MazeBot m = new MazeBot();
             //    Graph graph = Graph.Graphify(m.CurrentMapData);
             //    Solver s = new Solver(graph, new ManhattanDistance());
-            //    List<coordinate> solutionPath = s.getSteps();
-            //    ImageSaver.SaveMazeImage(m.CurrentMapData, s.getSteps(), 32, 8, $"{dir}/{m.getMapName()}");
+            //    List<Coordinate> solutionPath = s.GetSteps();
+            //    ImageSaver.SaveMazeImage(m.CurrentMapData, s.GetSteps(), 32, 8, $"{dir}/{m.MapName}");
             //    Console.WriteLine(m.CheckSolution(solutionPath).message);
-            //    //Console.WriteLine(List2String<coordinate>(s.getSteps()));
+            //    Console.WriteLine(Utils.List2String<Coordinate>(s.GetSteps()));
             //}
             Console.ReadLine();
         }
