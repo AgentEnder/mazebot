@@ -9,6 +9,8 @@ namespace MazeSolver
     {
         static void Main(string[] args)
         {
+            //Run I races
+
             for (int i = 0; i < 10; i++)
             {
                 DateTime start = DateTime.Now;
@@ -20,6 +22,9 @@ namespace MazeSolver
                 Console.WriteLine($"\nSolving and Drawing took {elapsed} seconds");
                 Console.WriteLine("===============================================\n");
             }
+
+            //Uncomment below to run random maze iterations
+
             //string dir = $"runs/{DateTime.Now.ToFileTime()}/";
             //Directory.CreateDirectory(dir);
             //for (int i = 0; i < 1000; i++)
@@ -33,27 +38,6 @@ namespace MazeSolver
             //    //Console.WriteLine(List2String<coordinate>(s.getSteps()));
             //}
             Console.ReadLine();
-        }
-
-        public static void Print2DArray<T>(T[,] matrix)
-        {
-            for (int i = 0; i < matrix.GetLength(0); i++)
-            {
-                for (int j = 0; j < matrix.GetLength(1); j++)
-                {
-                    Console.Write(matrix[i, j] + "\t");
-                }
-                Console.WriteLine();
-            }
-        }
-
-        public static string List2String<T>(List<T> list){
-            string ret = "[";
-            foreach (T item in list)
-            {
-                ret += $"{item},";
-            }
-            return $"{ret}]";
         }
     }
 }

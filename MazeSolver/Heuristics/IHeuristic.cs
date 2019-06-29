@@ -6,6 +6,6 @@ namespace MazeSolver
 {
     interface IHeuristic
     {
-        double Score(Graph g, coordinate move);
+        double Score(Graph g, Coordinate move);
     }
 }

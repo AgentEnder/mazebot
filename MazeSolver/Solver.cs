@@ -8,7 +8,7 @@ namespace MazeSolver
     {
         private IHeuristic _heuristic;
         private Graph graph;
-        private List<coordinate> path;
+        private List<Coordinate> path;
         public Solver(Graph g, IHeuristic heuristic)
         {
             _heuristic = heuristic;
@@ -18,43 +18,48 @@ namespace MazeSolver
         public void Solve()
         {
 
-            //List<pqueueItem> spots = new List<pqueueItem>();
-            BinaryHeap<pqueueItem> spots = new BinaryHeap<pqueueItem>();
-            List<coordinate> seen = new List<coordinate>();
-            spots.insert(new pqueueItem
+            BinaryHeap<pqueueItem> spots = new BinaryHeap<pqueueItem>(); //Spots remaining to check
+            List<Coordinate> seen = new List<Coordinate>(); //Spots already seen. Dont add them again.
+            //Add the starting point to the graph.
+            spots.Insert(new pqueueItem
             {
                 priority = 0,
                 curr = graph.Start,
-                path = new List<coordinate>() { graph.Start}
+                path = new List<Coordinate>() { graph.Start}
             });
 
-            pqueueItem current = spots.extractMin(); ;
-            while (!current.curr.Equals(graph.End))
+            pqueueItem current = spots.ExtractMin(); //Get the min value from pqueue.
+            while (!current.curr.Equals(graph.End)) //Not to end yet.
             {
-                List<coordinate> adjs = graph.GetAdjacencies(current.curr);
-                foreach (coordinate adj in adjs)
+                List<Coordinate> adjs = graph.GetAdjacencies(current.curr); //Where all can I go?
+                foreach (Coordinate adj in adjs)
                 {
-                    if (seen.Contains(adj))
+                    if (seen.Contains(adj)) //Already been here
                     {
                         continue;
                     }
+                    //I could come here though
                     pqueueItem new_spot = new pqueueItem()
                     {
                         priority = current.path.Count + _heuristic.Score(graph, adj),
                         curr = adj,
-                        path = new List<coordinate>(current.path)
+                        path = new List<Coordinate>(current.path)
                     };
-                    new_spot.path.Add(adj);
-                    spots.insert(new_spot);
+                    new_spot.path.Add(adj); //Path includes current node
+                    spots.Insert(new_spot); //I'll check it 
                 }
-                seen.Add(current.curr);
-                current = spots.extractMin();
+                seen.Add(current.curr); //Just checked you.
+                current = spots.ExtractMin(); //Get next node.
             }
-            path = current.path;
+            path = current.path; //Found a path.
 
         }
 
-        public List<coordinate> getSteps()
+        /// <summary>
+        /// Get the solved path. If Solve has not been called, Solve and then return path.
+        /// </summary>
+        /// <returns>Path to end in Coordinate Slice Format</returns>
+        public List<Coordinate> GetSteps()
         {
             if (path == null)
             {
@@ -63,11 +68,11 @@ namespace MazeSolver
             return path;
         }
 
-        struct pqueueItem : IComparable<pqueueItem>
+        private struct pqueueItem : IComparable<pqueueItem>
         {
             public double priority;
-            public coordinate curr;
-            public List<coordinate> path;
+            public Coordinate curr;
+            public List<Coordinate> path;
 
             public int CompareTo(pqueueItem other)
             {
