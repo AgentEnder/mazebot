@@ -4,7 +4,7 @@ using System.Text;
 
 namespace MazeSolver
 {
-    class ListPriorityQueue<T>:IPriorityQueue<T> where T : IComparable<T>
+    class ListPriorityQueue<T>:IPriorityQueue<T> where T:IComparable<T>
     {
         List<T> data;
 

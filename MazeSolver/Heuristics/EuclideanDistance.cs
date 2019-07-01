@@ -10,7 +10,7 @@ namespace MazeSolver
         {
             //Diff between coordinates
             Coordinate delta = move - g.End;
-            return Math.Sqrt(delta.x*delta.x+delta.y*delta.y); // Pythagorean Distance
+            return (delta.x*delta.x+delta.y*delta.y); // Pythagorean Distance
         }
     }
 }

@@ -62,6 +62,7 @@ namespace MazeSolver
 
         public MazeBot(string path)
         {
+            Console.WriteLine("Getting maze from: " + BASE_URL + path);
             currentMapData = getMaze(path);
         }
 
@@ -240,18 +241,18 @@ namespace MazeSolver
                 {
                     var result = streamReader.ReadToEnd();
                     res = JsonConvert.DeserializeObject<jsonRace>(result);
-                    while (res.nextMaze != null) //Theres more races!
-                    {
-                        Console.WriteLine($"Starting Maze {mazes.Count}"); //Log the maze start, so the consoles not empty the whole time
-                        MazeBot m = new MazeBot(res.nextMaze); //Get a maze
-                        Graph g = Graph.Graphify(m.CurrentMapData); //Make a graph
-                        mazes.Add(m.CurrentMapData); //Save current data for drawing later
-                        Solver s = new Solver(g, heuristic); //Solve the maze
-                        List<Coordinate> path = s.GetSteps();
-                        all_paths.Add(path); //Save the solution for drawing
-                        json = m.checkSolution(path); //Check your work
-                        res = JsonConvert.DeserializeObject<jsonRace>(json); //Get next maze
-                    }
+                }
+                while (res.nextMaze != null) //Theres more races!
+                {
+                    Console.WriteLine($"Starting Maze {mazes.Count}"); //Log the maze start, so the consoles not empty the whole time
+                    MazeBot m = new MazeBot(res.nextMaze); //Get a maze
+                    Graph g = Graph.Graphify(m.CurrentMapData); //Make a graph
+                    mazes.Add(m.CurrentMapData); //Save current data for drawing later
+                    Solver s = new Solver(g, heuristic); //Solve the maze
+                    List<Coordinate> path = s.GetSteps();
+                    all_paths.Add(path); //Save the solution for drawing
+                    json = m.checkSolution(path); //Check your work
+                    res = JsonConvert.DeserializeObject<jsonRace>(json); //Get next maze
                 }
             }
             catch (System.Net.WebException ex) //Bad req some where
@@ -277,7 +278,7 @@ namespace MazeSolver
                     ImageSaver.SaveMazeImage(mazes[i], all_paths[i], 16, 8, $"{directory}/{i}");
                 }
             }
-            string filePath = $"race/{queue.GetType().Name}Certificates.csv";
+            string filePath = $"race/{heuristic.GetType().Name + queue.GetType().Name}Certificates.csv";
             using (StreamWriter f = new StreamWriter(filePath, true))
             {
                 string time = res.message;

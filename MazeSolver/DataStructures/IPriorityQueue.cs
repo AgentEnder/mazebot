@@ -4,7 +4,7 @@ using System.Text;
 
 namespace MazeSolver
 {
-    interface IPriorityQueue<T>
+    interface IPriorityQueue<T> where T:IComparable<T>
     {
         T ExtractMin();
         void Insert(T item);
